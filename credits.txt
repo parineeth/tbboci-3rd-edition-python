@@ -1,0 +1,8 @@
+
+1. Thanks to Keith for the following:
+
+	a. Reporting a bug in Expression Evaluation. The bug has been fixed
+	b. Suggesting how to perform peek on a stack
+	c. Suggesting a simpler version of CircularQueue. 
+
+Thanks again Keith,  I sincerely appreciate it :)

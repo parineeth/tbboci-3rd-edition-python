@@ -27,14 +27,12 @@ def compare(result, expected) :
     
 
 def peekleft(dq):
-    result = dq.popleft()
-    dq.appendleft(result)
-    return result
+    return dq[0]
+
 
 def peek(dq):
-    result = dq.pop()
-    dq.append(result)
-    return result
+    return dq[-1]
+
 
 
 #a: list for which we have to find the maximum in every window of size k

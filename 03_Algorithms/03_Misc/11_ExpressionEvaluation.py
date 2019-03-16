@@ -7,6 +7,7 @@
 
 from __future__ import print_function
 import sys
+import subprocess
 
 try: 
     import queue
@@ -22,12 +23,8 @@ def handle_error() :
     sys.exit(1)
 
 
-#There is no peek functionality in python stack. So we are doing a get
-#followed by an immediate put to mimic the peek
 def peek(stack):
-    result = stack.get()
-    stack.put(result)
-    return result
+    return stack.queue[-1]
 
 
 #Helper function that picks the operator from the top of operator stack
@@ -51,14 +48,18 @@ def compute(num_stack, operator_stack) :
 
 
 
-#Helper function to check priority of operators
+
+#Helper function to check precedence of operators
 #stack_operator: operator that is at the top of the operator stack
 #exp_operator: operator that is currently being examined in the expression
-#Return value: True if operator in the stack is higher priority than operator
-#being examined in the expression
-def is_higher_precedence(stack_operator, exp_operator) :
+#Return value: True if operator in the stack is equal or greater  
+#precedence than operator being examined in the expression
+def is_eq_or_grt_precedence(stack_operator, exp_operator) :
     if ((stack_operator == '*' or stack_operator == '/') and 
         (exp_operator == '+' or exp_operator == '-')) :
+        return True
+
+    if (stack_operator == exp_operator) :
         return True
 
     return False
@@ -100,10 +101,10 @@ def evaluate_expression(expr) :
         elif (expr[i] == '+' or expr[i] == '-' or
             expr[i] == '*' or expr[i] == '/'): 
             #As long as the operator in the stack is of higher 
-            #priority than the operator in the expression, keep processing 
+            #precedence than the operator in the expression, keep processing 
             #the two stacks 
             while (not operator_stack.empty() and 
-                is_higher_precedence(peek(operator_stack), expr[i])): 
+                is_eq_or_grt_precedence(peek(operator_stack), expr[i])): 
                 compute(num_stack, operator_stack)
             
             operator_stack.put(expr[i])
@@ -134,6 +135,14 @@ if (__name__ == '__main__'):
     test('10 + 10 * 40', 410)
 
     test('(200 - (100 + 50)) * 30 / 10', 150) 
+
+    test('2 - 6 - 7', -11)
+
+    test('2 + 5 - 1', 6)
+
+    test('5 * 6 + 40', 70)
+
+    test('7 / 10 * 100 + 87', 87)
 
     print('Test passed ')
 

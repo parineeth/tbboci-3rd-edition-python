@@ -5,19 +5,25 @@
 #but WITHOUT ANY WARRANTY; without even the implied warranty of
 #MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+#This is an older version of the Circular Queue implementation.
+#There is no bug in this implementation. However there is a more simpler
+#implementation possible. Please refer to 04_CircularQueue.py
+#for the simpler implementation
+
 from __future__ import print_function
 import sys
 
 
 class CircularQueue(object): 
     def __init__(self) :
-        self.head = 0 #index of first element in queue. 
-        self.tail = 0 #index of free slot just after the last element in queue
+        self.head = -1 #index of first element in queue. -1 if queue is empty
+        self.tail = -1 #index of last element in queue. -1 if queue is empty
         self.count = 0 #Number of elements currently present in the queue
 
         self.max_size = 0 #Max number of elements that can be stored in queue
         self.buf = [] #buffer for storing elements
 
+    
     def add(self, new_element): 
         if (self.count == self.max_size) :
             #If the queue is full, then resize the queue
@@ -36,14 +42,19 @@ class CircularQueue(object):
                 new_pos += 1
                 old_pos = (old_pos + 1) % self.max_size
              
+
             self.buf = new_buf
             self.head = 0
-            self.tail = self.count
+            self.tail = self.count - 1
             self.max_size = new_size
 
-        #Insert the element at the tail and advance the tail
-        self.buf[self.tail] = new_element
+        #Advance the tail and insert the element at the tail 
         self.tail = (self.tail + 1) % self.max_size
+        self.buf[self.tail] = new_element
+
+        if (self.count == 0):
+            self.head = self.tail
+
         self.count += 1
     
         #Return the result code indicating success
@@ -57,8 +68,14 @@ class CircularQueue(object):
 
         removed_element = self.buf[self.head]
 
-        #Advance the head to the next location
-        self.head = (self.head + 1) % self.max_size 
+        if (self.head == self.tail) :
+            #There was only 1 item in the queue and that item has been 
+            #removed. So reinitialize self.head and self.tail to -1
+            self.head = -1
+            self.tail = -1
+        else :
+            #Advance the head to the next location
+            self.head = (self.head + 1) % self.max_size 
         
         self.count -= 1
 

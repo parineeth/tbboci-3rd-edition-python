@@ -20,12 +20,9 @@ def handle_error() :
     sys.exit(1)
 
 
-#There is no peek functionality in python stack. So we are doing a get
-#followed by an immediate put to mimic the peek
+
 def peek(stack):
-    result = stack.get()
-    stack.put(result)
-    return result
+    return stack.queue[-1]
 
 
 #Verify if the braces, brackets and parenthesis are properly nested 
